@@ -3,15 +3,13 @@ import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import * as path from 'path';
 
-import { config } from 'config/configuration';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { config } from '@app/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      load: [config],
-    }),
+    ConfigModule,
     ClientsModule.register([
       {
         name: 'AUTHENTICATION_PACKAGE',
