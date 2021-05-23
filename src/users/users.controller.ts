@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { GrpcMethod } from '@nestjs/microservices';
+import { EventPattern, GrpcMethod, MessagePattern } from '@nestjs/microservices';
 
 import { GetAllUsersResponse, UsersServiceController } from 'types/admin';
 import { UsersService } from './users.service';
@@ -15,5 +15,11 @@ export class UsersController implements UsersServiceController {
     return {
       email: response,
     };
+  }
+
+  @EventPattern('createUser')
+  saveCreatedUser(data: string) {
+    const obj = JSON.parse(data) as { id: string, email: string };
+    this.usersService.create(obj.id, obj.email);
   }
 }
