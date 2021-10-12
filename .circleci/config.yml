@@ -12,6 +12,16 @@ jobs:
       - run:
           name: eslint
           command: yarn eslint
+  build_and_push:
+      machine: true
+      steps:
+        - checkout
+        - run:
+            name: build and push Docker image
+            command: |
+              docker build -t kcc112/admin-service:latest .
+              echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_LOGIN --password-stdin
+              docker push kcc112/admin-service:latest
 
 workflows:
   base:
@@ -21,3 +31,10 @@ workflows:
             branches:
               only:
                 - ci
+      - build_and_push:
+          requires:
+            - test
+          filters:
+              branches:
+                only:
+                  - ci
